@@ -15,22 +15,29 @@
 import rclpy
 from rclpy.node import Node
 
-from std_msgs.msg import String
-
+# from std_msgs.msg import String
+from std_msgs.msg import ByteMultiArray
+import serial
+import time
 
 class MinimalSubscriber(Node):
 
     def __init__(self):
         super().__init__('minimal_subscriber')
         self.subscription = self.create_subscription(
-            String,
+            # String,
+            ByteMultiArray,
             'topic',
             self.listener_callback,
             10)
         self.subscription  # prevent unused variable warning
 
+        self.ser = serial.Serial("/dev/serial0", 57600)
+        self.ser.reset_input_buffer()
+
     def listener_callback(self, msg):
-        self.get_logger().info('I heard: "%s"' % msg.data)
+        self.get_logger().info('I heard: "%s"' % str(msg.data))
+        self.ser.write(msg.data)
 
 
 def main(args=None):

@@ -15,7 +15,8 @@
 import rclpy
 from rclpy.node import Node
 
-from std_msgs.msg import String
+# from std_msgs.msg import String
+from std_msgs.msg import ByteMultiArray
 import serial
 import time
 
@@ -24,7 +25,9 @@ class MinimalPublisher(Node):
 
     def __init__(self):
         super().__init__('minimal_publisher')
-        self.publisher_ = self.create_publisher(String, 'topic', 10)
+        # self.publisher_ = self.create_publisher(String, 'topic', 10)
+        self.publisher_ = self.create_publisher(ByteMultiArray, 'topic', 10)
+        
         timer_period = 0.5  # seconds
         self.timer = self.create_timer(timer_period, self.timer_callback)
         self.i = 0
@@ -33,8 +36,8 @@ class MinimalPublisher(Node):
         self.ser.reset_input_buffer()
 
     def timer_callback(self):
-        msg = String()
-        msg.data = 'No Message: %d' % self.i
+        msg = ByteMultiArray()
+        msg.data = [bytes('No Message: %d' % self.i, 'utf-8')]
         inWaiting_old = 0
         if self.ser.inWaiting()>0:
             inWaiting_old = self.ser.inWaiting()
@@ -46,7 +49,10 @@ class MinimalPublisher(Node):
 
             data_left = self.ser.inWaiting()             #check for remaining byte
             received_data += self.ser.read(data_left)
-            msg.data = str(received_data)
+
+            print(type(received_data))
+            print(len(received_data))
+            msg.data = [received_data]
 
         self.publisher_.publish(msg)
         # self.get_logger().info('Publishing: "%s"' % msg.data)
