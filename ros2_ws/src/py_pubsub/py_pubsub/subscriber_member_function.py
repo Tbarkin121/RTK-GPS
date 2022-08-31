@@ -15,8 +15,7 @@
 import rclpy
 from rclpy.node import Node
 
-# from std_msgs.msg import String
-from std_msgs.msg import ByteMultiArray
+from std_msgs.msg import String
 import serial
 import time
 
@@ -25,8 +24,7 @@ class MinimalSubscriber(Node):
     def __init__(self):
         super().__init__('minimal_subscriber')
         self.subscription = self.create_subscription(
-            # String,
-            ByteMultiArray,
+            String,
             'topic',
             self.listener_callback,
             10)
@@ -36,8 +34,9 @@ class MinimalSubscriber(Node):
         self.ser.reset_input_buffer()
 
     def listener_callback(self, msg):
-        self.get_logger().info('I heard: "%s"' % str(msg.data))
-        self.ser.write(msg.data)
+        self.get_logger().info('I heard: "%s"' % str(msg.data[0]))
+        og_bytes = bytes.fromhex(msg.data)
+        self.ser.write(og_bytes)
 
 
 def main(args=None):

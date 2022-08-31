@@ -21,8 +21,19 @@ while True:
 
 		print('Data Len : {}'.format(len(received_data)))
 		print(type(received_data))
-		print(str(received_data))
-		print(type(str(received_data)))
+		print(received_data)
+		int_data = []
+		for ints in received_data:
+			int_data.append(ints)
+
+		print()
+		print(int_data)
+		back_to_bytes = []
+		for i in int_data:
+			back_to_bytes.append(i.to_bytes(1, byteorder='little'))
+		print()
+		print(back_to_bytes)
+
 		# print(type(received_data.decode("utf_32") ))
 
 		# ser.write(received_data)
