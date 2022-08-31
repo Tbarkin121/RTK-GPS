@@ -34,9 +34,10 @@ class MinimalSubscriber(Node):
         self.ser.reset_input_buffer()
 
     def listener_callback(self, msg):
-        self.get_logger().info('I heard: "%s"' % str(msg.data[0]))
-        og_bytes = bytes.fromhex(msg.data)
-        self.ser.write(og_bytes)
+        self.get_logger().info('I heard: "%s"' % str(msg.data))
+        if(msg.data != "No Message"):
+            og_bytes = bytes.fromhex(msg.data)
+            self.ser.write(og_bytes)
 
 
 def main(args=None):
