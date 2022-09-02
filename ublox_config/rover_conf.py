@@ -174,9 +174,9 @@ def config_fixed(acc_limit: int, lat: float, lon: float, height: float) -> UBXMe
 if __name__ == "__main__":
 
     # Amend as required...
-    # PORT = "/dev/ttyACM0"
+    PORT = "/dev/ttyACM0"
+    # PORT = "/dev/serial0"
     # PORT_TYPE = "USB"  # choose from "USB", "UART1", "UART2"
-    PORT = "/dev/serial0"
     PORT_TYPE = "UART2"  # choose from "USB", "UART1", "UART2"
     BAUD = 57600
     TIMEOUT = 5

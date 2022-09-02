@@ -159,7 +159,7 @@ if __name__ == "__main__":
 
     # Amend as required...
     PORT = "/dev/ttyACM0"
-    PORT_TYPE = "USB"  # choose from "USB", "UART1", "UART2"
+    PORT_TYPE = "UART2"  # choose from "USB", "UART1", "UART2"
     BAUD = 57600
     TIMEOUT = 5
     SHOW_PRESET = True  # hide or show PyGPSClient preset string
