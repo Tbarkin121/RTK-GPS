@@ -1,6 +1,6 @@
 from setuptools import setup
 
-package_name = 'py_pubsub'
+package_name = 'rtk'
 
 setup(
     name=package_name,
@@ -13,15 +13,15 @@ setup(
     ],
     install_requires=['setuptools'],
     zip_safe=True,
-    maintainer='rtkbs',
-    maintainer_email='rtkbs@todo.todo',
+    maintainer='rover',
+    maintainer_email='tybarkin@gmail.com',
     description='TODO: Package description',
     license='TODO: License declaration',
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'talker = py_pubsub.publisher_member_function:main',
-            'listener = py_pubsub.subscriber_member_function:main',
+            'base = rtk.publisher_member_function:main',
+            'rover = rtk.subscriber_member_function:main',
         ],
     },
 )

@@ -1,0 +1,10 @@
+# Survey-in
+string time
+string status
+string mean_position_valid
+float32 obs_time
+int32 positions_used
+float32 mean_ecef_x
+float32 mean_ecef_y
+float32 mean_ecef_z
+float32 mean_3d_stddev
