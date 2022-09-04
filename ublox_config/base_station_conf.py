@@ -17,10 +17,12 @@ Created on 26 Apr 2022
 :license: BSD 3-Clause
 """
 
+import time
 from math import trunc
 from serial import Serial
 from pyubx2 import UBXMessage
 
+TMODE_NONE = 0
 TMODE_SVIN = 1
 TMODE_FIXED = 2
 
@@ -79,6 +81,32 @@ def config_rtcm(port_type: str) -> UBXMessage:
 
     return ubx
 
+def config_rover(port_type: str, acc_limit: int, svin_min_dur: int) -> UBXMessage:
+    """
+    Configure Survey-In mode with specied accuracy limit.
+    """
+
+    print("\nFormatting SVIN TMODE CFG-VALSET message...")
+    tmode = TMODE_NONE
+    layers = 1|2|4
+    transaction = 0
+    acc_limit = int(round(acc_limit / 0.1, 0))
+    cfg_data = [
+        ("CFG_TMODE_MODE", tmode),
+        ("CFG_TMODE_SVIN_ACC_LIMIT", acc_limit),
+        ("CFG_TMODE_SVIN_MIN_DUR", svin_min_dur),
+        (f"CFG_MSGOUT_UBX_NAV_SVIN_{port_type}", 1),
+    ]
+
+    ubx = UBXMessage.config_set(layers, transaction, cfg_data)
+
+    if SHOW_PRESET:
+        print(
+            "Set ZED-F9P to Survey-In Timing Mode Basestation, "
+            f"CFG, CFG_VALSET, {ubx.payload.hex()}, 1\n"
+        )
+
+    return ubx
 
 def config_svin(port_type: str, acc_limit: int, svin_min_dur: int) -> UBXMessage:
     """
@@ -182,6 +210,10 @@ if __name__ == "__main__":
         msg = config_rtcm(PORT_TYPE)
         send_msg(stream, msg)
 
+        # turn off TMODE3 settings so we can start a new survay in
+        msg = config_rover(PORT_TYPE, ACC_LIMIT, SVIN_MIN_DUR)
+        send_msg(stream, msg)
+        time.sleep(1)
         # configure either Survey-In or Fixed Timing Mode
         if TMODE == TMODE_SVIN:
             msg = config_svin(PORT_TYPE, ACC_LIMIT, SVIN_MIN_DUR)
