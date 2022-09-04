@@ -20,8 +20,8 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'base = rtk.publisher_member_function:main',
-            'rover = rtk.subscriber_member_function:main',
+            'base_rtk = rtk.publish_RTCM3.py:main',
+            'rover_rtk = rtk.subscribe_RTCM3:main',
         ],
     },
 )
