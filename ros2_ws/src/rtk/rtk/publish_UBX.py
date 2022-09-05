@@ -16,10 +16,11 @@ import rclpy
 from rclpy.node import Node
 
 from std_msgs.msg import String
-from ubxmsg import SVIN
+from ubxmsg.msg import SVIN
 
 import serial
 import time
+from pyubx2 import UBXReader
 
 class MinimalPublisher(Node):
     
@@ -32,7 +33,8 @@ class MinimalPublisher(Node):
         self.timer = self.create_timer(timer_period, self.timer_callback)
         self.i = 0
 
-        self.ser = serial.Serial("/dev/serial0", 57600)
+        self.ser = serial.Serial("/dev/ttyACM0", 57600, timeout=3)
+        self.ubr = UBXReader(self.ser, protfilter=2) # Just UBS
         self.ser.reset_input_buffer()
 
     def timer_callback(self):
@@ -47,30 +49,24 @@ class MinimalPublisher(Node):
             
             print('FRESH DATA, GET EM WHILE ITS HOT!')
             while(self.ser.inWaiting()):
-                print('data in waiting : {}'.format(ser.inWaiting()))    
-                (raw_data, parsed_data) = ubr.read()
-                print(type(parsed_data))
-                print(parsed_data.identity)
+                print('data in waiting : {}'.format(self.ser.inWaiting()))    
+                (raw_data, parsed_data) = self.ubr.read()
+                # print(type(parsed_data))
+                # print(parsed_data.identity)
 
                 if(parsed_data.identity == 'NAV-SVIN'):
-                    # msg.time
-                    print(parsed_data.iTOW)
-                    # msg.status
-                    print(parsed_data.iTOW)
-                    # msg.mean_position_valid
-                    print(parsed_data.iTOW)
-                    # msg.obs_time
-                    print(parsed_data.iTOW)
-                    # msg.positions_used
-                    print(parsed_data.iTOW)
-                    # msg.mean_ecef_x
-                    print(parsed_data.meanX)
-                    # msg.mean_ecef_y
-                    print(parsed_data.meanY)
-                    # msg.mean_ecef_z
-                    print(parsed_data.meanZ)
-                    # msg.mean_3d_stddev
-                    print(parsed_data.meanAcc)
+                    msg.time = parsed_data.iTOW
+                    msg.dur = parsed_data.dur
+                    msg.mean_x = float(parsed_data.meanX)
+                    msg.mean_y = float(parsed_data.meanY)
+                    msg.mean_z = float(parsed_data.meanZ)
+                    msg.mean_xhp = float(parsed_data.meanXHP)
+                    msg.mean_yhp = float(parsed_data.meanYHP)
+                    msg.mean_zhp = float(parsed_data.meanZHP)
+                    msg.mean_acc = float(parsed_data.meanAcc)
+                    msg.obs_time = parsed_data.obs
+                    msg.valid = bool(parsed_data.valid)
+                    msg.active = bool(parsed_data.active)
 
                 print(parsed_data)
                 print('\n')
@@ -78,21 +74,14 @@ class MinimalPublisher(Node):
                     # print('Not Reading Anything')
                     break
                 inWaiting_old = self.ser.inWaiting()
-
+            
+            self.publisher_.publish(msg)
+            print(msg)
             print('Data End:')
             print('\n\n\n')
-            message_recieved = True
+
+
             
-
-            data_left = self.ser.inWaiting()             #check for remaining byte
-            received_data += self.ser.read(data_left)
-            msg.data = received_data.hex()
-
-            # print(type(msg.data))
-            # print(len(msg.data))
-            # print(msg.data)
-
-            self.publisher_.publish(msg)
         # self.get_logger().info('Publishing: "%s"' % msg.data)
         self.i += 1
 
