@@ -193,7 +193,7 @@ if __name__ == "__main__":
     SHOW_PRESET = True  # hide or show PyGPSClient preset string
 
     TMODE = TMODE_SVIN  # "TMODE_SVIN" or 1 = Survey-In, "TMODE_FIXED" or 2 = Fixed
-    ACC_LIMIT = 2000  # accuracy in mm
+    ACC_LIMIT = 5000  # accuracy in mm
 
     # only used if TMODE = 1 ...
     SVIN_MIN_DUR = 90  # seconds

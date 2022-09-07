@@ -16,7 +16,7 @@ import rclpy
 from rclpy.node import Node
 
 from std_msgs.msg import String
-from ubxmsg.msg import SVIN
+from ubxmsg.msg import SVIN, PVT
 import serial
 import time
 
@@ -24,17 +24,26 @@ class MinimalSubscriber(Node):
 
     def __init__(self):
         super().__init__('minimal_subscriber')
-        self.subscription = self.create_subscription(
+        self.subscription_svin = self.create_subscription(
             SVIN,
-            'topic',
-            self.listener_callback,
+            'svin_msg',
+            self.listener_callback1,
             10)
-        self.subscription  # prevent unused variable warning
+        self.subscription_pvt = self.create_subscription(
+            PVT,
+            'pvt_msg',
+            self.listener_callback2,
+            10)
 
-        self.ser = serial.Serial("/dev/serial0", 57600)
-        self.ser.reset_input_buffer()
 
-    def listener_callback(self, msg):
+        self.subscription_svin  # prevent unused variable warning
+        self.subscription_pvt  # prevent unused variable warning
+
+    def listener_callback1(self, msg):
+        self.get_logger().info('I heard a message')
+        print(msg)
+
+    def listener_callback2(self, msg):
         self.get_logger().info('I heard a message')
         print(msg)
 

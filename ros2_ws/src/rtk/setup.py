@@ -13,7 +13,7 @@ setup(
     ],
     install_requires=['setuptools'],
     zip_safe=True,
-    maintainer='rover',
+    maintainer='Tyler Barkin',
     maintainer_email='tybarkin@gmail.com',
     description='TODO: Package description',
     license='TODO: License declaration',
@@ -24,6 +24,7 @@ setup(
             'rover_rtk = rtk.subscribe_RTCM3:main',
             'ubx_pub = rtk.publish_UBX:main',
             'ubx_sub = rtk.subscribe_UBX:main',
+            'base_node = rtk.basestation_node:main',
         ],
     },
 )

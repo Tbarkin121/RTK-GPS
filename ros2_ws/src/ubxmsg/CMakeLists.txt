@@ -19,7 +19,7 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/ODO.msg"
   "msg/POSECEF.msg"
   "msg/POSLLH.msg"
-  "msg/PUT.msg"
+  "msg/PVT.msg"
   "msg/SVIN.msg"
   "msg/VELECEF.msg"
   "msg/VELNED.msg"
