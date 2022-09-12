@@ -9,6 +9,3 @@ python3 -m pip install --upgrade pyubx2
 
 adding pyrtcm
 python3 -m pip install --upgrade pyrtcm
-
-TO DO: 
-Make a requirements.txt instead of just writing it down here... ehh ill get to it 

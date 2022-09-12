@@ -20,6 +20,8 @@ from pyubx2 import UBXReader
 
 import rclpy
 from rclpy.node import Node
+from rclpy.action import ActionServer
+from action_base.action import Base
 
 from std_msgs.msg import String
 from ubxmsg.msg import SVIN, PVT
@@ -58,7 +60,33 @@ class Rover(Node):
         self.timer = self.create_timer(timer_period, self.timer_callback)
         self.i = 0
 
-        self.new_survay_in()
+        self._action_server = ActionServer(
+            self,
+            Base,
+            'base',
+            self.execute_callback)
+    
+    def execute_callback(self, goal_handle):
+        self.get_logger().info('Executing Action...')
+
+        feedback_msg = Base.Feedback()
+        feedback_msg.progress = False
+
+        if(goal_handle.request.action_id[0] == 1):
+            feedback_msg.progress = True
+            self.new_survay_in()
+            self.get_logger().info('Feedback: {0}'.format(feedback_msg.progress))
+
+        if(goal_handle.request.action_id[0] == 2):
+            self.ACC_LIMIT = goal_handle.request.action_id[1]
+            feedback_msg.progress = True
+            self.get_logger().info('New ACC LIMIT: {0}'.format(self.ACC_LIMIT))
+
+
+        goal_handle.succeed()
+        result = Base.Result()
+        result.success = True
+        return result
         
     def new_survay_in(self):
         msg = self.uf.config_rtcm(self.PORT_TYPE)
