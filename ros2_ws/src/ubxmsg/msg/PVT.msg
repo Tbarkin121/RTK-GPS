@@ -10,7 +10,7 @@ bool valid_time
 bool fully_resolved
 bool valid_mag
 uint16 t_acc
-uint32 nano
+int32 nano
 uint16 fix_type
 bool gnss_fix_ok
 bool dif_soln
@@ -35,7 +35,7 @@ float32 head_mot
 uint32 s_acc
 float32 head_acc
 float32 p_dop
-bool invalid_l1h
+bool invalid_llh
 uint32 last_correction_age
 float32 head_veh
 float32 mag_dec

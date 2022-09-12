@@ -55,7 +55,7 @@ class MinimalPublisher(Node):
             
             print('FRESH DATA, GET EM WHILE ITS HOT!')
             while(self.ser.inWaiting()):
-                print('data in waiting : {}'.format(self.ser.inWaiting()))    
+                # print('data in waiting : {}'.format(self.ser.inWaiting()))    
                 (raw_data, parsed_data) = self.ubr.read()
                 # print(type(parsed_data))
                 # print(parsed_data.identity)
@@ -89,7 +89,7 @@ class MinimalPublisher(Node):
                     msg_pvt.valid_mag = bool(parsed_data.validMag)
                     msg_pvt.t_acc = parsed_data.tAcc
                     msg_pvt.nano = parsed_data.nano
-                    msg_pvt.fix_type = parsed_data.fixTime
+                    msg_pvt.fix_type = parsed_data.fixType
                     msg_pvt.gnss_fix_ok = bool(parsed_data.gnssFixOk)
                     msg_pvt.dif_soln = bool(parsed_data.difSoln)
                     msg_pvt.psm_state = parsed_data.psmState
@@ -113,7 +113,7 @@ class MinimalPublisher(Node):
                     msg_pvt.s_acc = parsed_data.sAcc
                     msg_pvt.head_acc = float(parsed_data.headAcc)
                     msg_pvt.p_dop = float(parsed_data.pDOP)
-                    msg_pvt.invalid_l1h = bool(parsed_data.invalidL1h)
+                    msg_pvt.invalid_llh = bool(parsed_data.invalidLlh)
                     msg_pvt.last_correction_age = parsed_data.lastCorrectionAge
                     msg_pvt.head_veh = float(parsed_data.headVeh)
                     msg_pvt.mag_dec = float(parsed_data.magDec)

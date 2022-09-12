@@ -6,20 +6,19 @@ from math import trunc
 from serial import Serial
 from pyubx2 import UBXMessage
 
-
+SHOW_PRESET = True  # hide or show PyGPSClient preset string
 class Ublox(object):
-    TMODE_NONE = 0
-    TMODE_SVIN = 1
-    TMODE_FIXED = 2
-
-    RTMC3_XXX4 = 0
-    RTMC3_XXX7 = 1
-
     def __init__(self):
         print("RTK Base Station Init...")
+        self.TMODE_NONE = 0
+        self.TMODE_SVIN = 1
+        self.TMODE_FIXED = 2
+
+        self.RTMC3_XXX4 = 0
+        self.RTMC3_XXX7 = 1
         print("RTK Base Station Init...DONE")
 
-    def send_msg(serial_out: Serial, ubx: UBXMessage):
+    def send_msg(self, serial_out: Serial, ubx: UBXMessage):
         """
         Send config message to receiver.
         """
@@ -28,7 +27,7 @@ class Ublox(object):
         print(ubx)
         serial_out.write(ubx.serialize())
 
-    def config_rtcm(port_type: str) -> UBXMessage:
+    def config_rtcm(self, port_type: str) -> UBXMessage:
         """
         Configure which RTCM3 messages to output.
         """
@@ -72,13 +71,13 @@ class Ublox(object):
 
         return ubx
 
-    def config_rover(port_type: str, acc_limit: int, svin_min_dur: int) -> UBXMessage:
+    def config_rover(self, port_type: str, acc_limit: int, svin_min_dur: int) -> UBXMessage:
         """
         Configure Survey-In mode with specied accuracy limit.
         """
 
         print("\nFormatting SVIN TMODE CFG-VALSET message...")
-        tmode = TMODE_NONE
+        tmode = self.TMODE_NONE
         layers = 1|2|4
         transaction = 0
         acc_limit = int(round(acc_limit / 0.1, 0))
@@ -99,13 +98,13 @@ class Ublox(object):
 
         return ubx
 
-    def config_svin(port_type: str, acc_limit: int, svin_min_dur: int) -> UBXMessage:
+    def config_svin(self, port_type: str, acc_limit: int, svin_min_dur: int) -> UBXMessage:
         """
         Configure Survey-In mode with specied accuracy limit.
         """
 
         print("\nFormatting SVIN TMODE CFG-VALSET message...")
-        tmode = TMODE_SVIN
+        tmode = self.TMODE_SVIN
         layers = 1|2|4
         transaction = 0
         acc_limit = int(round(acc_limit / 0.1, 0))
@@ -127,13 +126,13 @@ class Ublox(object):
         return ubx
 
 
-    def config_fixed(acc_limit: int, lat: float, lon: float, height: float) -> UBXMessage:
+    def config_fixed(self, acc_limit: int, lat: float, lon: float, height: float) -> UBXMessage:
         """
         Configure Fixed mode with specified coordinates.
         """
 
         print("\nFormatting FIXED TMODE CFG-VALSET message...")
-        tmode = TMODE_FIXED
+        tmode = self.TMODE_FIXED
         pos_type = 1  # LLH (as opposed to ECEF)
         layers = 1
         transaction = 0
