@@ -25,6 +25,7 @@ setup(
             'ubx_pub = rtk.publish_UBX:main',
             'ubx_sub = rtk.subscribe_UBX:main',
             'base_node = rtk.basestation_node:main',
+            'rover_node = rtk.rover_node:main',
         ],
     },
 )

@@ -20,17 +20,15 @@ from pyubx2 import UBXReader
 
 import rclpy
 from rclpy.node import Node
-from rclpy.action import ActionServer
-from action_base.action import Base
 
 from std_msgs.msg import String
 from ubxmsg.msg import SVIN, PVT
 
 from rtk.ublox_functions import Ublox
 
-class BaseStation(Node):
+class Rover(Node):
     def __init__(self):
-        super().__init__('base_station')
+        super().__init__('rover')
         self.uf = Ublox()
 
         self.PORT = "/dev/ttyACM0"
@@ -60,29 +58,8 @@ class BaseStation(Node):
         self.timer = self.create_timer(timer_period, self.timer_callback)
         self.i = 0
 
-        self._action_server = ActionServer(
-            self,
-            Base,
-            'base',
-            self.execute_callback)
-
+        self.new_survay_in()
         
-    def execute_callback(self, goal_handle):
-        self.get_logger().info('Executing Action...')
-
-        feedback_msg = Base.Feedback()
-        feedback_msg.progress = 0
-
-        if(goal_handle.request.action_id == 1):
-            feedback_msg.progress = 1
-            self.new_survay_in()
-            self.get_logger().info('Feedback: {0}'.format(feedback_msg.progress))
-
-        goal_handle.succeed()
-        result = Base.Result()
-        result.success = 1
-        return result
-
     def new_survay_in(self):
         msg = self.uf.config_rtcm(self.PORT_TYPE)
         self.uf.send_msg(self.stream, msg)
@@ -205,14 +182,14 @@ class BaseStation(Node):
 def main(args=None):
     rclpy.init(args=args)
 
-    base_station = BaseStation()
+    rover_node = Rover()
 
-    rclpy.spin(base_station)
+    rclpy.spin(rover_node)
 
     # Destroy the node explicitly
     # (optional - otherwise it will be done automatically
     # when the garbage collector destroys the node object)
-    base_station.destroy_node()
+    rover_node.destroy_node()
     rclpy.shutdown()
 
 
