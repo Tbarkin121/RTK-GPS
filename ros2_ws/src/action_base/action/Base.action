@@ -1,5 +1,5 @@
-int32 action_id
+int32[] action_id
 ---
-int32 success
+bool success
 ---
-int32 progress
+bool progress

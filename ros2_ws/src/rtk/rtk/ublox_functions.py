@@ -46,7 +46,7 @@ class Ublox(object):
             "1230",
         ):
             cfg = f"CFG_MSGOUT_RTCM_3X_TYPE{rtcm_type}_{port_type}"
-            cfg_data.append([cfg, 1])
+            cfg_data.append([cfg, 0])
 
         for rtcm_type in (
             "1005",
@@ -59,7 +59,7 @@ class Ublox(object):
             "4072_1",
         ):
             cfg = f"CFG_MSGOUT_RTCM_3X_TYPE{rtcm_type}_{port_type}"
-            cfg_data.append([cfg, 0])
+            cfg_data.append([cfg, 1])
 
         ubx = UBXMessage.config_set(layers, transaction, cfg_data)
 

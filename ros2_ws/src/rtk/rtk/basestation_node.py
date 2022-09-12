@@ -71,16 +71,22 @@ class BaseStation(Node):
         self.get_logger().info('Executing Action...')
 
         feedback_msg = Base.Feedback()
-        feedback_msg.progress = 0
+        feedback_msg.progress = False
 
-        if(goal_handle.request.action_id == 1):
-            feedback_msg.progress = 1
+        if(goal_handle.request.action_id[0] == 1):
+            feedback_msg.progress = True
             self.new_survay_in()
             self.get_logger().info('Feedback: {0}'.format(feedback_msg.progress))
 
+        if(goal_handle.request.action_id[0] == 2):
+            self.ACC_LIMIT = goal_handle.request.action_id[1]
+            feedback_msg.progress = True
+            self.get_logger().info('New ACC LIMIT: {0}'.format(self.ACC_LIMIT))
+
+
         goal_handle.succeed()
         result = Base.Result()
-        result.success = 1
+        result.success = True
         return result
 
     def new_survay_in(self):
