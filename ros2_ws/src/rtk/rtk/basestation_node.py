@@ -41,7 +41,8 @@ class BaseStation(Node):
         self.stream.reset_input_buffer()
 
         # This is the port that the RTCM3 data will be emitted from
-        self.PORT_TYPE = "UART2"  # choose from "USB", "UART1", "UART2"
+        self.RTCM3_PORT_TYPE = "UART2"  # choose from "USB", "UART1", "UART2"
+        self.UBX_PORT_TYPE = "USB"
 
         self.TMODE = self.uf.TMODE_SVIN  # "TMODE_SVIN" or 1 = Survey-In, "TMODE_FIXED" or 2 = Fixed
         self.ACC_LIMIT = 5000  # accuracy in mm
