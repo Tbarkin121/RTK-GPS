@@ -66,6 +66,15 @@ class BaseStation(Node):
             'base',
             self.execute_callback)
 
+        # Turn Off All Messages
+        # self.uf.turn_off_all_msg(self.stream)
+        # time.sleep(0.1)
+        self.uf.rtcm3_output(self.uf.RTCM3_List2, self.RTCM3_PORT_TYPE, self.stream, 1)
+        time.sleep(0.1)
+        self.uf.ubx_nav_output(self.uf.NAV_List, self.UBX_PORT_TYPE, self.stream, 1)
+        time.sleep(0.1)
+        self.uf.ubx_nav_output(self.uf.NAV_List, self.RTCM3_PORT_TYPE, self.stream, 0)
+
         
     def execute_callback(self, goal_handle):
         self.get_logger().info('Executing Action...')

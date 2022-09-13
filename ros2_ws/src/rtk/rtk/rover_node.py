@@ -15,8 +15,8 @@
 import time
 from math import trunc
 import serial
-from pyubx2 import UBXMessage
-from pyubx2 import UBXReader
+from pyubx2 import UBXMessage, UBXReader
+from pyubx2 import POLL
 
 import rclpy
 from rclpy.node import Node
@@ -34,6 +34,8 @@ class Rover(Node):
         self.uf = Ublox()
 
         self.PORT = "/dev/ttyACM0"
+        # self.PORT = "/dev/serial0"
+
         self.BAUD = 57600
         self.TIMEOUT = 5
         self.stream = serial.Serial(self.PORT, self.BAUD, self.TIMEOUT)
@@ -41,7 +43,8 @@ class Rover(Node):
         self.stream.reset_input_buffer()
 
         # This is the port that the RTCM3 data will be emitted from
-        self.PORT_TYPE = "UART2"  # choose from "USB", "UART1", "UART2"
+        self.RTCM3_PORT_TYPE = "UART2"  # choose from "USB", "UART1", "UART2"
+        self.UBX_PORT_TYPE = "USB"
 
         self.TMODE = self.uf.TMODE_SVIN  # "TMODE_SVIN" or 1 = Survey-In, "TMODE_FIXED" or 2 = Fixed
         self.ACC_LIMIT = 5000  # accuracy in mm
@@ -65,6 +68,16 @@ class Rover(Node):
             Base,
             'base',
             self.execute_callback)
+
+        # Turn Off All Messages
+        # self.uf.turn_off_all_msg(self.stream)
+        # time.sleep(0.1)
+        self.uf.rtcm3_output(self.uf.RTCM3_List2, self.RTCM3_PORT_TYPE, self.stream, 1)
+        time.sleep(0.1)
+        self.uf.ubx_nav_output(self.uf.NAV_List, self.UBX_PORT_TYPE, self.stream, 1)
+        time.sleep(0.1)
+        self.uf.ubx_nav_output(self.uf.NAV_List, self.RTCM3_PORT_TYPE, self.stream, 0)
+
     
     def execute_callback(self, goal_handle):
         self.get_logger().info('Executing Action...')
@@ -87,15 +100,16 @@ class Rover(Node):
         result = Base.Result()
         result.success = True
         return result
-        
-    def new_survay_in(self):
-        msg = self.uf.config_rtcm(self.PORT_TYPE)
-        self.uf.send_msg(self.stream, msg)
 
-        msg = self.uf.config_rover(self.PORT_TYPE, self.ACC_LIMIT, self.SVIN_MIN_DUR)
+    def new_survay_in(self):
+        # msg = self.uf.config_rtcm(self.RTCM3_PORT_TYPE)
+        # self.uf.send_msg(self.stream, msg)
+        self.uf.rtcm3_output(self.uf.RTCM3_List2, self.RTCM3_PORT_TYPE, self.stream)
+
+        msg = self.uf.config_rover(self.RTCM3_PORT_TYPE, self.ACC_LIMIT, self.SVIN_MIN_DUR)
         self.uf.send_msg(self.stream, msg)
         time.sleep(1)
-        msg = self.uf.config_svin(self.PORT_TYPE, self.ACC_LIMIT, self.SVIN_MIN_DUR)
+        msg = self.uf.config_svin(self.RTCM3_PORT_TYPE, self.ACC_LIMIT, self.SVIN_MIN_DUR)
         self.uf.send_msg(self.stream, msg)
 
     def timer_callback(self):
