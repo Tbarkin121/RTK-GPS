@@ -1,0 +1,34 @@
+[INFO] [launch]: All log files can be found below /home/base/.ros/log/2022-09-13-18-23-17-992251-baseStation-2748
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [base_node-1]: process started with pid [2752]
+[INFO] [base_rtk-2]: process started with pid [2754]
+[base_node-1] Traceback (most recent call last):
+[base_node-1]   File "/home/base/git/RTK-GPS/ros2_ws/install/rtk/lib/rtk/base_node", line 33, in <module>
+[base_node-1]     sys.exit(load_entry_point('rtk', 'console_scripts', 'base_node')())
+[base_node-1]   File "/home/base/git/RTK-GPS/ros2_ws/build/rtk/rtk/basestation_node.py", line 234, in main
+[base_node-1]     rclpy.spin(base_station)
+[base_node-1]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/__init__.py", line 222, in spin
+[base_node-1]     executor.spin_once()
+[base_node-1]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 704, in spin_once
+[base_node-1]     handler, entity, node = self.wait_for_ready_callbacks(timeout_sec=timeout_sec)
+[base_node-1]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 690, in wait_for_ready_callbacks
+[base_node-1]     return next(self._cb_iter)
+[base_node-1]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 592, in _wait_for_ready_callbacks
+[base_node-1]     raise ExternalShutdownException()
+[base_node-1] rclpy.executors.ExternalShutdownException
+[ERROR] [base_node-1]: process has died [pid 2752, exit code 1, cmd '/home/base/git/RTK-GPS/ros2_ws/install/rtk/lib/rtk/base_node --ros-args -r __node:=sim -r __ns:=/base_gps'].
+[base_rtk-2] Traceback (most recent call last):
+[base_rtk-2]   File "/home/base/git/RTK-GPS/ros2_ws/install/rtk/lib/rtk/base_rtk", line 33, in <module>
+[base_rtk-2]     sys.exit(load_entry_point('rtk', 'console_scripts', 'base_rtk')())
+[base_rtk-2]   File "/home/base/git/RTK-GPS/ros2_ws/build/rtk/rtk/publish_RTCM3.py", line 67, in main
+[base_rtk-2]     rclpy.spin(minimal_publisher)
+[base_rtk-2]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/__init__.py", line 222, in spin
+[base_rtk-2]     executor.spin_once()
+[base_rtk-2]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 704, in spin_once
+[base_rtk-2]     handler, entity, node = self.wait_for_ready_callbacks(timeout_sec=timeout_sec)
+[base_rtk-2]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 690, in wait_for_ready_callbacks
+[base_rtk-2]     return next(self._cb_iter)
+[base_rtk-2]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 592, in _wait_for_ready_callbacks
+[base_rtk-2]     raise ExternalShutdownException()
+[base_rtk-2] rclpy.executors.ExternalShutdownException
+[ERROR] [base_rtk-2]: process has died [pid 2754, exit code 1, cmd '/home/base/git/RTK-GPS/ros2_ws/install/rtk/lib/rtk/base_rtk --ros-args -r __node:=sim -r __ns:=/base_rtk'].
