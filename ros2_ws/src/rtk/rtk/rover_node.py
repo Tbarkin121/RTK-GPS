@@ -24,7 +24,7 @@ from rclpy.action import ActionServer
 from action_base.action import Base
 
 from std_msgs.msg import String
-from ubxmsg.msg import SVIN, PVT
+from ubxmsg.msg import PVT, RELPOSNED, HPPOSLLH, VELNED
 
 from rtk.ublox_functions import Ublox
 
@@ -56,7 +56,9 @@ class Rover(Node):
         self.ARP_LON = -115.012345678
         self.ARP_HEIGHT = 137000  # cm
         
-        self.publisher_svin = self.create_publisher(SVIN, 'svin_msg', 10)
+        self.publisher_relposned = self.create_publisher(RELPOSNED, 'relposned_msg', 10)
+        self.publisher_hpposllh = self.create_publisher(HPPOSLLH, 'hpposllh_msg', 10)
+        self.publisher_velned = self.create_publisher(VELNED, 'velned_msg', 10)
         self.publisher_pvt = self.create_publisher(PVT, 'pvt_msg', 10)
         
         timer_period = 0.5  # seconds
@@ -69,9 +71,7 @@ class Rover(Node):
             'base',
             self.execute_callback)
 
-        # Turn Off All Messages
-        # self.uf.turn_off_all_msg(self.stream)
-        # time.sleep(0.1)
+        
         self.uf.rtcm3_output(self.uf.RTCM3_List2, self.RTCM3_PORT_TYPE, self.stream, 1)
         time.sleep(0.1)
         self.uf.ubx_nav_output(self.uf.NAV_List, self.UBX_PORT_TYPE, self.stream, 1)
@@ -95,6 +95,14 @@ class Rover(Node):
             feedback_msg.progress = True
             self.get_logger().info('New ACC LIMIT: {0}'.format(self.ACC_LIMIT))
 
+        if(goal_handle.request.action_id[0] == 3):
+            feedback_msg.progress = True
+            # Turn Off All Messages
+            self.uf.turn_off_all_msg(self.stream)
+            time.sleep(0.1)
+            self.get_logger().info('Turned All Messages Off ***')
+
+
 
         goal_handle.succeed()
         result = Base.Result()
@@ -113,12 +121,16 @@ class Rover(Node):
         self.uf.send_msg(self.stream, msg)
 
     def timer_callback(self):
-        msg_svin = SVIN()
+        msg_relposned = RELPOSNED()
+        msg_hpposllh = HPPOSLLH() 
+        msg_velned = VELNED()
         msg_pvt = PVT()
 
         inWaiting_old = 0
 
-        rec_svin = False
+        rec_relposned = False
+        rec_hpposllh = False
+        rec_velned = False
         rec_pvt = False
         if self.stream.inWaiting()>0:
 
@@ -134,20 +146,23 @@ class Rover(Node):
                 # print(type(parsed_data))
                 # print(parsed_data.identity)
 
-                if(parsed_data.identity == 'NAV-SVIN'):
-                    msg_svin.time = parsed_data.iTOW
-                    msg_svin.dur = parsed_data.dur
-                    msg_svin.mean_x = float(parsed_data.meanX)
-                    msg_svin.mean_y = float(parsed_data.meanY)
-                    msg_svin.mean_z = float(parsed_data.meanZ)
-                    msg_svin.mean_xhp = float(parsed_data.meanXHP)
-                    msg_svin.mean_yhp = float(parsed_data.meanYHP)
-                    msg_svin.mean_zhp = float(parsed_data.meanZHP)
-                    msg_svin.mean_acc = float(parsed_data.meanAcc)
-                    msg_svin.obs_time = parsed_data.obs
-                    msg_svin.valid = bool(parsed_data.valid)
-                    msg_svin.active = bool(parsed_data.active)
-                    rec_svin = True
+                if(parsed_data.identity == 'NAV-RELPOSNED'):
+                    msg_relposned.time = parsed_data.iTOW
+                    msg_relposned.rel_pos_north = float(parsed_data.relPosN)
+                    msg_relposned.rel_pos_east = float(parsed_data.relPosE)
+                    msg_relposned.rel_pos_down = float(parsed_data.relPosD)
+                    msg_relposned.rel_pos_length = float(parsed_data.relPosLength)
+                    msg_relposned.rel_pos_heading = float(parsed_data.relPosHeading)
+                    msg_relposned.rel_pos_hpn = float(parsed_data.relPosHPN)
+                    msg_relposned.rel_pos_hpe = float(parsed_data.relPosHPE)
+                    msg_relposned.rel_pos_hpd = float(parsed_data.relPosHPD)
+                    msg_relposned.rel_pos_hplength = float(parsed_data.relPosHPLength)
+                    msg_relposned.acc_north = float(parsed_data.accN)
+                    msg_relposned.acc_east = float(parsed_data.accE)
+                    msg_relposned.acc_down = float(parsed_data.accD)
+                    msg_relposned.acc_length = float(parsed_data.accLength)
+                    msg_relposned.acc_heading = float(parsed_data.accHeading)
+                    rec_relposned = True
                 
                 if(parsed_data.identity == 'NAV-PVT'):
                     msg_pvt.time = parsed_data.iTOW
@@ -195,6 +210,31 @@ class Rover(Node):
                     msg_pvt.mag_acc = float(parsed_data.magAcc)
                     rec_pvt = True
 
+                if(parsed_data.identity == 'NAV-VELNED'):
+                    msg_velned.time = parsed_data.iTOW
+                    msg_velned.v_north = float(parsed_data.velN)
+                    msg_velned.v_east = float(parsed_data.velE)
+                    msg_velned.v_down = float(parsed_data.velD)
+                    msg_velned.speed_3d = float(parsed_data.speed)
+                    msg_velned.speed_ground = float(parsed_data.gSpeed)
+                    msg_velned.heading_2d = float(parsed_data.heading)
+                    msg_velned.acc_vel_3d = float(parsed_data.sAcc)
+                    msg_velned.acc_heading = float(parsed_data.cAcc)
+                    rec_velned = True
+
+                if(parsed_data.identity == 'NAV-HPPOSLLH'):
+                    msg_hpposllh.time = parsed_data.iTOW
+                    msg_hpposllh.lon = float(parsed_data.lon)
+                    msg_hpposllh.lat = float(parsed_data.lat)
+                    msg_hpposllh.h_ellipsoid = float(parsed_data.height)
+                    msg_hpposllh.h_mean_sealevel = float(parsed_data.hMSL)
+                    msg_hpposllh.h_geoid_sep = msg_hpposllh.h_ellipsoid - msg_hpposllh.h_mean_sealevel
+                    msg_hpposllh.llh_invalid = bool(parsed_data.invalidLlh)
+                    msg_hpposllh.acc_2d = float(parsed_data.hAcc)
+                    msg_hpposllh.acc_vert = float(parsed_data.vAcc)
+                    rec_hpposllh = True
+                    
+
                 # print(parsed_data)
                 # print('\n')
                 if(self.stream.inWaiting() == inWaiting_old):
@@ -203,10 +243,17 @@ class Rover(Node):
                 inWaiting_old = self.stream.inWaiting()
 
 
-            print(rec_svin)
-            if(rec_svin):    
-                self.publisher_svin.publish(msg_svin)
-                print(msg_svin)
+            if(rec_relposned):    
+                self.publisher_relposned.publish(msg_relposned)
+                print(msg_relposned)
+
+            if(rec_velned):    
+                self.publisher_hpposllh.publish(msg_hpposllh)
+                print(msg_hpposllh)
+
+            if(rec_hpposllh):    
+                self.publisher_velned.publish(msg_velned)
+                print(msg_velned)
 
             if(rec_pvt):    
                 self.publisher_pvt.publish(msg_pvt)

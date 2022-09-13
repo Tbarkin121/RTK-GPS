@@ -1,5 +1,5 @@
 # High Precision Geodetic Position
-string time
+uint32 time
 float32 lon
 float32 lat
 float32 h_ellipsoid

@@ -92,6 +92,14 @@ class BaseStation(Node):
             feedback_msg.progress = True
             self.get_logger().info('New ACC LIMIT: {0}'.format(self.ACC_LIMIT))
 
+        if(goal_handle.request.action_id[0] == 3):
+            feedback_msg.progress = True
+            # Turn Off All Messages
+            self.uf.turn_off_all_msg(self.stream)
+            time.sleep(0.1)
+            self.get_logger().info('Turned All Messages Off ***')
+
+
 
         goal_handle.succeed()
         result = Base.Result()

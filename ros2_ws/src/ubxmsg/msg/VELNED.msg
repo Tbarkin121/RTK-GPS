@@ -1,5 +1,5 @@
 # Velocity WGS84
-string time
+uint32 time
 float32 v_north
 float32 v_east
 float32 v_down

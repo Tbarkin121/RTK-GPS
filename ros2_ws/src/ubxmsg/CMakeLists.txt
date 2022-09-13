@@ -23,6 +23,7 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/SVIN.msg"
   "msg/VELECEF.msg"
   "msg/VELNED.msg"
+  "msg/RELPOSNED.msg"
 )
 
 if(BUILD_TESTING)
