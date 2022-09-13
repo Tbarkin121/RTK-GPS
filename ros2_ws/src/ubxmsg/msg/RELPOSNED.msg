@@ -1,0 +1,24 @@
+# Relative Position NED
+uint32 time
+float32 rel_pos_north
+float32 rel_pos_east
+float32 rel_pos_down
+float32 rel_pos_length
+float32 rel_pos_heading
+float32 rel_pos_hpn
+float32 rel_pos_hpe
+float32 rel_pos_hpd
+float32 rel_pos_hplength
+float32 acc_north
+float32 acc_east
+float32 acc_down
+float32 acc_length
+float32 acc_heading
+int8 gnss_fix_ok
+int8 diff_soln
+int8 rel_pos_valid
+int8 is_moving
+int8 ref_pos_missed
+int8 ref_obs_missed
+int8 rel_pos_heading_valid
+int8 rel_pos_normalized
