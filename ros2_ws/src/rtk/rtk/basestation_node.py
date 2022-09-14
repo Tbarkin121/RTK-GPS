@@ -108,13 +108,13 @@ class BaseStation(Node):
         return result
 
     def new_survay_in(self):
-        msg = self.uf.config_rtcm(self.PORT_TYPE)
+        msg = self.uf.config_rtcm(self.RTCM3_PORT_TYPE)
         self.uf.send_msg(self.stream, msg)
 
-        msg = self.uf.config_rover(self.PORT_TYPE, self.ACC_LIMIT, self.SVIN_MIN_DUR)
+        msg = self.uf.config_rover(self.RTCM3_PORT_TYPE, self.ACC_LIMIT, self.SVIN_MIN_DUR)
         self.uf.send_msg(self.stream, msg)
         time.sleep(1)
-        msg = self.uf.config_svin(self.PORT_TYPE, self.ACC_LIMIT, self.SVIN_MIN_DUR)
+        msg = self.uf.config_svin(self.RTCM3_PORT_TYPE, self.ACC_LIMIT, self.SVIN_MIN_DUR)
         self.uf.send_msg(self.stream, msg)
 
     def timer_callback(self):
