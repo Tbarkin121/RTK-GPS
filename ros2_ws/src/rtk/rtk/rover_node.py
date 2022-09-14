@@ -59,7 +59,7 @@ class Rover(Node):
         self.publisher_relposned = self.create_publisher(RELPOSNED, 'relposned_msg', 10)
         self.publisher_hpposllh = self.create_publisher(HPPOSLLH, 'hpposllh_msg', 10)
         self.publisher_velned = self.create_publisher(VELNED, 'velned_msg', 10)
-        self.publisher_pvt = self.create_publisher(PVT, 'pvt_msg', 10)
+        self.publisher_pvt = self.create_publisher(PVT, 'rover_pvt_msg', 10)
         self.publisher_posecef = self.create_publisher(POSECEF, 'posecef_msg', 10)
 
         
@@ -73,12 +73,6 @@ class Rover(Node):
             'base',
             self.execute_callback)
 
-        
-        self.uf.rtcm3_output(self.uf.RTCM3_List2, self.RTCM3_PORT_TYPE, self.stream, 1)
-        time.sleep(0.1)
-        self.uf.ubx_nav_output(self.uf.NAV_List, self.UBX_PORT_TYPE, self.stream, 1)
-        time.sleep(0.1)
-        self.uf.ubx_nav_output(self.uf.NAV_List, self.RTCM3_PORT_TYPE, self.stream, 0)
 
     
     def execute_callback(self, goal_handle):
@@ -105,6 +99,13 @@ class Rover(Node):
             time.sleep(0.1)
             self.get_logger().info('Turned All Messages Off ***')
 
+        if(goal_handle.request.action_id[0] == 4):
+            feedback_msg.progress = True
+            # Turn Off All Messages
+            self.port_setup()
+            time.sleep(0.1)
+            self.get_logger().info('Configured Ports for rtk robot stuff...')
+            
 
 
         goal_handle.succeed()
@@ -122,6 +123,14 @@ class Rover(Node):
         time.sleep(1)
         msg = self.uf.config_svin(self.RTCM3_PORT_TYPE, self.ACC_LIMIT, self.SVIN_MIN_DUR)
         self.uf.send_msg(self.stream, msg)
+    
+    def port_setup(self):
+        self.uf.rtcm3_output(self.uf.RTCM3_List2, self.RTCM3_PORT_TYPE, self.stream, 1)
+        time.sleep(0.1)
+        self.uf.ubx_nav_output(self.uf.NAV_List, self.UBX_PORT_TYPE, self.stream, 1)
+        time.sleep(0.1)
+        self.uf.ubx_nav_output(self.uf.NAV_List, self.RTCM3_PORT_TYPE, self.stream, 0)
+
 
     def timer_callback(self):
         msg_relposned = RELPOSNED()
@@ -255,10 +264,11 @@ class Rover(Node):
                     break
                 inWaiting_old = self.stream.inWaiting()
 
-
+            print()
             if(rec_relposned):    
                 self.publisher_relposned.publish(msg_relposned)
-                # print(msg_relposned)
+                print(msg_relposned)
+                print()
 
             if(rec_velned):    
                 self.publisher_hpposllh.publish(msg_hpposllh)
@@ -275,6 +285,7 @@ class Rover(Node):
             if(rec_posecef):
                 self.publisher_posecef.publish(msg_posecef)
                 print(msg_posecef)
+                print()
             
             print('Data End:')
             print('\n\n\n')

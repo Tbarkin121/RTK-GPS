@@ -55,7 +55,7 @@ class BaseStation(Node):
         self.ARP_HEIGHT = 137000  # cm
         
         self.publisher_svin = self.create_publisher(SVIN, 'svin_msg', 10)
-        self.publisher_pvt = self.create_publisher(PVT, 'pvt_msg', 10)
+        self.publisher_pvt = self.create_publisher(PVT, 'base_pvt_msg', 10)
         
         timer_period = 0.5  # seconds
         self.timer = self.create_timer(timer_period, self.timer_callback)
@@ -66,15 +66,6 @@ class BaseStation(Node):
             Base,
             'base',
             self.execute_callback)
-
-        # Turn Off All Messages
-        # self.uf.turn_off_all_msg(self.stream)
-        # time.sleep(0.1)
-        self.uf.rtcm3_output(self.uf.RTCM3_List2, self.RTCM3_PORT_TYPE, self.stream, 1)
-        time.sleep(0.1)
-        self.uf.ubx_nav_output(self.uf.NAV_List, self.UBX_PORT_TYPE, self.stream, 1)
-        time.sleep(0.1)
-        self.uf.ubx_nav_output(self.uf.NAV_List, self.RTCM3_PORT_TYPE, self.stream, 0)
 
         
     def execute_callback(self, goal_handle):
@@ -100,6 +91,12 @@ class BaseStation(Node):
             time.sleep(0.1)
             self.get_logger().info('Turned All Messages Off ***')
 
+        if(goal_handle.request.action_id[0] == 4):
+            feedback_msg.progress = True
+            # Turn Off All Messages
+            self.port_setup()
+            time.sleep(0.1)
+            self.get_logger().info('Configured Ports for rtk robot stuff...')
 
 
         goal_handle.succeed()
