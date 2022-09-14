@@ -20,8 +20,8 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'base_rtk = rtk.publish_RTCM3:main',
-            'rover_rtk = rtk.subscribe_RTCM3:main',
+            'rtcm3_pub = rtk.publish_RTCM3:main',
+            'rtcm3_sub = rtk.subscribe_RTCM3:main',
             'ubx_pub = rtk.publish_UBX:main',
             'ubx_sub = rtk.subscribe_UBX:main',
             'base_node = rtk.basestation_node:main',

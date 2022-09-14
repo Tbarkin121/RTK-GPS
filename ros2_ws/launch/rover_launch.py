@@ -5,14 +5,14 @@ def generate_launch_description():
     return LaunchDescription([
         Node(
             package='rtk',
-            namespace='rover_gps',
+            # namespace='rover_gps',
             executable='rover_node',
-            name='sim'
+            # name='sim'
         ),
         Node(
             package='rtk',
-            namespace='rover_rtk',
-            executable='rover_rtk',
-            name='sim'
+            # namespace='rtmc3_sub',
+            executable='rtcm3_sub',
+            # name='sim'
         )
     ])

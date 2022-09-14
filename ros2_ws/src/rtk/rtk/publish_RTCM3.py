@@ -20,11 +20,11 @@ from std_msgs.msg import String
 import serial
 import time
 
-class MinimalPublisher(Node):
+class RTCM3Publisher(Node):
     
 
     def __init__(self):
-        super().__init__('minimal_publisher')
+        super().__init__('rtcm3_publisher')
         self.publisher_ = self.create_publisher(String, 'topic', 10)
         
         timer_period = 0.5  # seconds
@@ -62,14 +62,14 @@ class MinimalPublisher(Node):
 def main(args=None):
     rclpy.init(args=args)
 
-    minimal_publisher = MinimalPublisher()
+    rtcm3_publisher = RTCM3Publisher()
 
-    rclpy.spin(minimal_publisher)
+    rclpy.spin(rtcm3_publisher)
 
     # Destroy the node explicitly
     # (optional - otherwise it will be done automatically
     # when the garbage collector destroys the node object)
-    minimal_publisher.destroy_node()
+    rtcm3_publisher.destroy_node()
     rclpy.shutdown()
 
 

@@ -11,8 +11,8 @@ def generate_launch_description():
         ),
         Node(
             package='rtk',
-            # namespace='base_rtk',
-            executable='base_rtk',
+            # namespace='rtcm3_pub',
+            executable='rtcm3_pub',
             # name='sim'
         ),
         Node(

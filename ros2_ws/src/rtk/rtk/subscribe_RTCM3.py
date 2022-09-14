@@ -19,10 +19,10 @@ from std_msgs.msg import String
 import serial
 import time
 
-class MinimalSubscriber(Node):
+class RTCM3Subscriber(Node):
 
     def __init__(self):
-        super().__init__('minimal_subscriber')
+        super().__init__('rtcm3_subscriber')
         self.subscription = self.create_subscription(
             String,
             'topic',
@@ -43,14 +43,14 @@ class MinimalSubscriber(Node):
 def main(args=None):
     rclpy.init(args=args)
 
-    minimal_subscriber = MinimalSubscriber()
+    rtcm3_subscriber = RTCM3Subscriber()
 
-    rclpy.spin(minimal_subscriber)
+    rclpy.spin(rtcm3_subscriber)
 
     # Destroy the node explicitly
     # (optional - otherwise it will be done automatically
     # when the garbage collector destroys the node object)
-    minimal_subscriber.destroy_node()
+    rtcm3_subscriber.destroy_node()
     rclpy.shutdown()
 
 

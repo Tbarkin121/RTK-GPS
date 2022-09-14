@@ -24,7 +24,7 @@ from rclpy.action import ActionServer
 from action_base.action import Base
 
 from std_msgs.msg import String
-from ubxmsg.msg import PVT, RELPOSNED, HPPOSLLH, VELNED
+from ubxmsg.msg import PVT, RELPOSNED, HPPOSLLH, VELNED, POSECEF
 
 from rtk.ublox_functions import Ublox
 
@@ -60,6 +60,8 @@ class Rover(Node):
         self.publisher_hpposllh = self.create_publisher(HPPOSLLH, 'hpposllh_msg', 10)
         self.publisher_velned = self.create_publisher(VELNED, 'velned_msg', 10)
         self.publisher_pvt = self.create_publisher(PVT, 'pvt_msg', 10)
+        self.publisher_posecef = self.create_publisher(POSECEF, 'posecef_msg', 10)
+
         
         timer_period = 0.5  # seconds
         self.timer = self.create_timer(timer_period, self.timer_callback)
@@ -86,9 +88,10 @@ class Rover(Node):
         feedback_msg.progress = False
 
         if(goal_handle.request.action_id[0] == 1):
-            feedback_msg.progress = True
-            self.new_survay_in()
-            self.get_logger().info('Feedback: {0}'.format(feedback_msg.progress))
+            pass
+            # feedback_msg.progress = True
+            # self.new_survay_in()
+            # self.get_logger().info('Feedback: {0}'.format(feedback_msg.progress))
 
         if(goal_handle.request.action_id[0] == 2):
             self.ACC_LIMIT = goal_handle.request.action_id[1]
@@ -125,6 +128,7 @@ class Rover(Node):
         msg_hpposllh = HPPOSLLH() 
         msg_velned = VELNED()
         msg_pvt = PVT()
+        msg_posecef = POSECEF()
 
         inWaiting_old = 0
 
@@ -132,6 +136,7 @@ class Rover(Node):
         rec_hpposllh = False
         rec_velned = False
         rec_pvt = False
+        rec_posecef = False
         if self.stream.inWaiting()>0:
 
             inWaiting_old = self.stream.inWaiting()	
@@ -233,6 +238,14 @@ class Rover(Node):
                     msg_hpposllh.acc_2d = float(parsed_data.hAcc)
                     msg_hpposllh.acc_vert = float(parsed_data.vAcc)
                     rec_hpposllh = True
+
+                if(parsed_data.identity == 'NAV-POSECEF'):
+                    msg_posecef.time = parsed_data.iTOW
+                    msg_posecef.x_ecef = float(parsed_data.ecefX)
+                    msg_posecef.y_ecef = float(parsed_data.ecefY)
+                    msg_posecef.z_ecef = float(parsed_data.ecefZ)
+                    msg_posecef.acc = float(parsed_data.pAcc)
+                    rec_posecef = True
                     
 
                 # print(parsed_data)
@@ -245,19 +258,23 @@ class Rover(Node):
 
             if(rec_relposned):    
                 self.publisher_relposned.publish(msg_relposned)
-                print(msg_relposned)
+                # print(msg_relposned)
 
             if(rec_velned):    
                 self.publisher_hpposllh.publish(msg_hpposllh)
-                print(msg_hpposllh)
+                # print(msg_hpposllh)
 
             if(rec_hpposllh):    
                 self.publisher_velned.publish(msg_velned)
-                print(msg_velned)
+                # print(msg_velned)
 
-            if(rec_pvt):    
-                self.publisher_pvt.publish(msg_pvt)
-                print(msg_pvt)
+            # if(rec_pvt):    
+            #     self.publisher_pvt.publish(msg_pvt)
+            #     print(msg_pvt)
+
+            if(rec_posecef):
+                self.publisher_posecef.publish(msg_posecef)
+                print(msg_posecef)
             
             print('Data End:')
             print('\n\n\n')
