@@ -162,20 +162,20 @@ class Rover(Node):
 
                 if(parsed_data.identity == 'NAV-RELPOSNED'):
                     msg_relposned.time = parsed_data.iTOW
-                    msg_relposned.rel_pos_north = float(parsed_data.relPosN)
-                    msg_relposned.rel_pos_east = float(parsed_data.relPosE)
-                    msg_relposned.rel_pos_down = float(parsed_data.relPosD)
-                    msg_relposned.rel_pos_length = float(parsed_data.relPosLength)
-                    msg_relposned.rel_pos_heading = float(parsed_data.relPosHeading)
-                    msg_relposned.rel_pos_hpn = float(parsed_data.relPosHPN)
-                    msg_relposned.rel_pos_hpe = float(parsed_data.relPosHPE)
-                    msg_relposned.rel_pos_hpd = float(parsed_data.relPosHPD)
-                    msg_relposned.rel_pos_hplength = float(parsed_data.relPosHPLength)
-                    msg_relposned.acc_north = float(parsed_data.accN)
-                    msg_relposned.acc_east = float(parsed_data.accE)
-                    msg_relposned.acc_down = float(parsed_data.accD)
-                    msg_relposned.acc_length = float(parsed_data.accLength)
-                    msg_relposned.acc_heading = float(parsed_data.accHeading)
+                    msg_relposned.rel_pos_north = parsed_data.relPosN
+                    msg_relposned.rel_pos_east = parsed_data.relPosE
+                    msg_relposned.rel_pos_down = parsed_data.relPosD
+                    msg_relposned.rel_pos_length = parsed_data.relPosLength
+                    msg_relposned.rel_pos_heading = parsed_data.relPosHeading
+                    msg_relposned.rel_pos_hpn = parsed_data.relPosHPN
+                    msg_relposned.rel_pos_hpe = parsed_data.relPosHPE
+                    msg_relposned.rel_pos_hpd = parsed_data.relPosHPD
+                    msg_relposned.rel_pos_hplength = parsed_data.relPosHPLength
+                    msg_relposned.acc_north = parsed_data.accN
+                    msg_relposned.acc_east = parsed_data.accE
+                    msg_relposned.acc_down = parsed_data.accD
+                    msg_relposned.acc_length = parsed_data.accLength
+                    msg_relposned.acc_heading = parsed_data.accHeading
                     rec_relposned = True
                 
                 if(parsed_data.identity == 'NAV-PVT'):
@@ -203,57 +203,58 @@ class Rover(Node):
                     msg_pvt.confirmed_data = bool(parsed_data.confirmedDate)
                     msg_pvt.confirmed_time = bool(parsed_data.confirmedTime)
                     msg_pvt.num_sv = parsed_data.numSV
-                    msg_pvt.lon = float(parsed_data.lon)
-                    msg_pvt.lat = float(parsed_data.lat)
-                    msg_pvt.height = float(parsed_data.height)
+                    msg_pvt.lon = parsed_data.lon
+                    msg_pvt.lat = parsed_data.lat
+                    # msg_pvt.height = parsed_data.height
                     msg_pvt.h_msl = parsed_data.hMSL
                     msg_pvt.h_acc = parsed_data.hAcc
                     msg_pvt.v_acc = parsed_data.vAcc
-                    msg_pvt.vel_n = float(parsed_data.velN)
-                    msg_pvt.vel_e = float(parsed_data.velE)
-                    msg_pvt.vel_d = float(parsed_data.velD)
-                    msg_pvt.ground_speed = float(parsed_data.gSpeed)
-                    msg_pvt.head_mot = float(parsed_data.headMot)
+                    # msg_pvt.vel_n = parsed_data.velN
+                    # msg_pvt.vel_e = parsed_data.velE
+                    # msg_pvt.vel_d = parsed_data.velD
+                    msg_pvt.ground_speed = parsed_data.gSpeed
+                    msg_pvt.head_mot = parsed_data.headMot
                     msg_pvt.s_acc = parsed_data.sAcc
-                    msg_pvt.head_acc = float(parsed_data.headAcc)
-                    msg_pvt.p_dop = float(parsed_data.pDOP)
+                    msg_pvt.head_acc = parsed_data.headAcc
+                    msg_pvt.p_dop = parsed_data.pDOP
                     msg_pvt.invalid_llh = bool(parsed_data.invalidLlh)
                     msg_pvt.last_correction_age = parsed_data.lastCorrectionAge
-                    msg_pvt.head_veh = float(parsed_data.headVeh)
-                    msg_pvt.mag_dec = float(parsed_data.magDec)
-                    msg_pvt.mag_acc = float(parsed_data.magAcc)
+                    msg_pvt.head_veh = parsed_data.headVeh
+                    msg_pvt.mag_dec = parsed_data.magDec
+                    msg_pvt.mag_acc = parsed_data.magAcc
                     rec_pvt = True
 
                 if(parsed_data.identity == 'NAV-VELNED'):
                     msg_velned.time = parsed_data.iTOW
-                    msg_velned.v_north = float(parsed_data.velN)
-                    msg_velned.v_east = float(parsed_data.velE)
-                    msg_velned.v_down = float(parsed_data.velD)
-                    msg_velned.speed_3d = float(parsed_data.speed)
-                    msg_velned.speed_ground = float(parsed_data.gSpeed)
-                    msg_velned.heading_2d = float(parsed_data.heading)
-                    msg_velned.acc_vel_3d = float(parsed_data.sAcc)
-                    msg_velned.acc_heading = float(parsed_data.cAcc)
+                    msg_velned.v_north = parsed_data.velN
+                    msg_velned.v_east = parsed_data.velE
+                    msg_velned.v_down = parsed_data.velD
+                    msg_velned.speed_3d = parsed_data.speed
+                    msg_velned.speed_ground = parsed_data.gSpeed
+                    msg_velned.heading_2d = parsed_data.heading
+                    msg_velned.acc_vel_3d = parsed_data.sAcc
+                    msg_velned.acc_heading = parsed_data.cAcc
                     rec_velned = True
 
                 if(parsed_data.identity == 'NAV-HPPOSLLH'):
                     msg_hpposllh.time = parsed_data.iTOW
-                    msg_hpposllh.lon = float(parsed_data.lon)
-                    msg_hpposllh.lat = float(parsed_data.lat)
-                    msg_hpposllh.h_ellipsoid = float(parsed_data.height)
-                    msg_hpposllh.h_mean_sealevel = float(parsed_data.hMSL)
+                    msg_hpposllh.lon = parsed_data.lon
+                    msg_hpposllh.lat = parsed_data.lat
+                    msg_hpposllh.h_ellipsoid = parsed_data.height
+                    msg_hpposllh.h_mean_sealevel = parsed_data.hMSL
                     msg_hpposllh.h_geoid_sep = msg_hpposllh.h_ellipsoid - msg_hpposllh.h_mean_sealevel
                     msg_hpposllh.llh_invalid = bool(parsed_data.invalidLlh)
-                    msg_hpposllh.acc_2d = float(parsed_data.hAcc)
-                    msg_hpposllh.acc_vert = float(parsed_data.vAcc)
+                    print(type(parsed_data.hAcc))
+                    msg_hpposllh.acc_2d = int(parsed_data.hAcc)
+                    msg_hpposllh.acc_vert = parsed_data.vAcc
                     rec_hpposllh = True
 
                 if(parsed_data.identity == 'NAV-POSECEF'):
                     msg_posecef.time = parsed_data.iTOW
-                    msg_posecef.x_ecef = float(parsed_data.ecefX)
-                    msg_posecef.y_ecef = float(parsed_data.ecefY)
-                    msg_posecef.z_ecef = float(parsed_data.ecefZ)
-                    msg_posecef.acc = float(parsed_data.pAcc)
+                    msg_posecef.x_ecef = parsed_data.ecefX
+                    msg_posecef.y_ecef = parsed_data.ecefY
+                    msg_posecef.z_ecef = parsed_data.ecefZ
+                    msg_posecef.acc = parsed_data.pAcc
                     rec_posecef = True
                     
 
@@ -272,15 +273,18 @@ class Rover(Node):
 
             if(rec_velned):    
                 self.publisher_hpposllh.publish(msg_hpposllh)
-                # print(msg_hpposllh)
+                print(msg_hpposllh)
+                print()
 
             if(rec_hpposllh):    
                 self.publisher_velned.publish(msg_velned)
-                # print(msg_velned)
+                print(msg_velned)
+                print()
 
-            # if(rec_pvt):    
-            #     self.publisher_pvt.publish(msg_pvt)
-            #     print(msg_pvt)
+            if(rec_pvt):    
+                self.publisher_pvt.publish(msg_pvt)
+                print(msg_pvt)
+                print()
 
             if(rec_posecef):
                 self.publisher_posecef.publish(msg_posecef)
