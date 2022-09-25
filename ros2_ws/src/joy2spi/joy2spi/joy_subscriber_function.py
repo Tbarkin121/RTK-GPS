@@ -43,15 +43,16 @@ class JoySubscriber(Node):
         self.to_send_next[2] = targ_vel_3
         self.to_send_next[3] = targ_vel_4
         
-        time_since_last_message = 0
+        self.time_since_last_message = 0
         
     def spi_timer_callback(self):
-        time_since_last_message += 1
-        if(time_since_last_message > 10):
+        
+        if(self.time_since_last_message > 10):
             self.to_send_next[0] = 0.0
             self.to_send_next[1] = 0.0
             self.to_send_next[2] = 0.0
             self.to_send_next[3] = 0.0
+        self.time_since_last_message += 1
 
         bytes_to_send = self.to_send_next.tobytes()
         for i in range(8):
@@ -72,8 +73,8 @@ class JoySubscriber(Node):
         self.to_send_next[1] = targ_vel_2
         self.to_send_next[2] = targ_vel_3
         self.to_send_next[3] = targ_vel_4
-        
-        time_since_last_message = 0
+
+        self.time_since_last_message = 0
         
 
 
